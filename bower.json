@@ -1,0 +1,10 @@
+{
+  "name": "vertx-eventbus",
+  "version": "1.0.0",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.4.0",
+    "bower-sockjs-client": "0.3.4"
+  },
+  "homepage": "https://github.com/Dan-Dongcheol-Lee/web-components/vertx-eventbus",
+  "license": "Apache 2.0"
+}
