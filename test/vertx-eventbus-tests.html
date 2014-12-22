@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="../webcomponentsjs/webcomponents.min.js"></script>
+    <script src="../web-component-tester/browser.js"></script>
+    <link rel="import" href="../vertx-eventbus.html">
+</head>
+<body>
+<vertx-eventbus id="eventBus" url="http://localhost:8090"></vertx-eventbus>
+<script>
+    var eventBus = document.getElementById('#eventBus');
+
+    suite('<vertx-eventbus>', function() {
+      test('should have url attribute', function() {
+        expect(eventBus.url).to.equal('http://localhost:8090');
+      });
+
+      test('should fire open event after accessing to vertx backend successfully', function(done) {
+        eventBus.addEventListener('open', function() {
+          expect(eventBus.isConnected).to.equal(true);
+          done();
+        });
+      });
+    });
+</script>
+</body>
+</html>
