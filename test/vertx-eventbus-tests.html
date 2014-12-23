@@ -2,14 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <script src="../webcomponentsjs/webcomponents.min.js"></script>
-    <script src="../web-component-tester/browser.js"></script>
-    <link rel="import" href="../vertx-eventbus.html">
+    <script src="../bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+    <link rel="import" href="../src/vertx-eventbus.html">
 </head>
 <body>
 <vertx-eventbus id="eventBus" url="http://localhost:8090"></vertx-eventbus>
 <script>
-    var eventBus = document.getElementById('#eventBus');
+    var eventBus = document.getElementById('eventBus');
+
+    console.log(eventBus);
 
     suite('<vertx-eventbus>', function() {
       test('should have url attribute', function() {

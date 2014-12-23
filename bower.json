@@ -6,7 +6,10 @@
   },
   "dependencies": {
     "polymer": "Polymer/polymer#^0.4.0",
-    "bower-sockjs-client": "0.3.4"
+    "bower-sockjs-client": "0.3.4",
+    "vertxbus": "*",
+    "sockjs": "~0.3.4",
+    "webcomponentsjs": "~0.5.2"
   },
   "homepage": "https://github.com/Dan-Dongcheol-Lee/web-components/vertx-eventbus",
   "license": "Apache-2"

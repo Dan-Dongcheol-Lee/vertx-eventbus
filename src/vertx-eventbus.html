@@ -1,0 +1,67 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<script type="text/javascript" src="../bower_components/sockjs/sockjs.js"></script>
+<script type="text/javascript" src="../bower_components/vertxbus/vertxbus.js"></script>
+
+<polymer-element name="vertx-eventbus"
+                 attributes="url pingIntervalInSeconds registerHandlers autoReconnectIntervalInSeconds">
+    <script>
+    Polymer('vertx-eventbus', {
+
+      url: null,
+      pingIntervalInSeconds: null,
+      registerHandlers: null,
+      autoReconnectIntervalInSeconds: null,
+      eventBus: null,
+      isConnected: false,
+
+      urlChanged: function() {
+        if (this.url) {
+            this.close();
+            this.connect();
+        }
+      },
+
+      autoReconnectIntervalInSecondsChanged: function() {
+        if (this.autoReconnectIntervalInSeconds && !this.isConnected) {
+            this.connect();
+        }
+      },
+
+      connect: function() {
+        var options = this.pingIntervalInSeconds ? {vertxbus_ping_interval: (1000 * this.pingIntervalInSeconds)} : null;
+        this.eventBus = new vertx.EventBus(this.url, options);
+        this.eventBus.onopen = function() {
+            this.isConnected = true;
+            this.fire('open');
+            if (this.registerHandlers) {
+                this.registerHandlers.forEach(function(regHandler) {
+                    this.eventBus.registerHandler(regHandler.address, regHandler.function);
+                });
+            }
+        };
+
+        this.eventBus.onclose = function() {
+            this.isConnected = false;
+            this.fire('close');
+            if (this.autoReconnectIntervalInSeconds) {
+                setTimeout(this.connect(), (1000 * this.autoReconnectIntervalInSeconds));
+            }
+        };
+      },
+
+      close: function() {
+        if (this.eventBus && this.registerHandlers) {
+            this.registerHandlers.forEach(function(regHandler) {
+                this.eventBus.unregisterHandler(regHandler.address, regHandler.function);
+            });
+            this.eventBus.close();
+        }
+        this.isConnected = false;
+      },
+
+      ready: function() {
+        this.connect();
+      }
+    });
+  </script>
+</polymer-element>
