@@ -6,7 +6,6 @@
                  attributes="url pingIntervalInSeconds registerHandlers autoReconnectIntervalInSeconds">
     <script>
     Polymer('vertx-eventbus', {
-
       url: null,
       pingIntervalInSeconds: null,
       registerHandlers: null,
@@ -28,23 +27,24 @@
       },
 
       connect: function() {
+        var self = this;
         var options = this.pingIntervalInSeconds ? {vertxbus_ping_interval: (1000 * this.pingIntervalInSeconds)} : null;
         this.eventBus = new vertx.EventBus(this.url, options);
         this.eventBus.onopen = function() {
-            this.isConnected = true;
-            this.fire('open');
-            if (this.registerHandlers) {
-                this.registerHandlers.forEach(function(regHandler) {
-                    this.eventBus.registerHandler(regHandler.address, regHandler.function);
+            self.isConnected = true;
+            self.fire('open');
+            if (self.registerHandlers) {
+                self.registerHandlers.forEach(function(regHandler) {
+                    self.eventBus.registerHandler(regHandler.address, regHandler.function);
                 });
             }
         };
 
         this.eventBus.onclose = function() {
-            this.isConnected = false;
-            this.fire('close');
-            if (this.autoReconnectIntervalInSeconds) {
-                setTimeout(this.connect(), (1000 * this.autoReconnectIntervalInSeconds));
+            self.isConnected = false;
+            self.fire('close');
+            if (self.autoReconnectIntervalInSeconds) {
+                setTimeout(self.connect(), (1000 * self.autoReconnectIntervalInSeconds));
             }
         };
       },
