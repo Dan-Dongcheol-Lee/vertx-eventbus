@@ -1,9 +1,10 @@
 {
   "name": "vertx-eventbus",
   "version": "1.0.0",
-  "main": "./src/vertx-eventbus.html",
+  "main": "./vertx-eventbus.html",
   "ignore": [
-    "**/.*",
+    "*.js",
+    "test",
     "node_modules",
     "bower_components"
   ],
