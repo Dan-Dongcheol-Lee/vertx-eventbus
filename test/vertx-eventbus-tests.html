@@ -7,39 +7,38 @@
     <link rel="import" href="../src/vertx-eventbus.html">
 </head>
 <body>
-<vertx-eventbus id="eventBus" url="http://localhost:8090"></vertx-eventbus>
+<vertx-eventbus id="eventBus"
+                url="http://localhost:8090"
+                pingIntervalInSeconds="20"
+                autoReconnectIntervalInSeconds="10"></vertx-eventbus>
 <script>
-    var eventBus = document.getElementById('eventBus');
 
-    console.log(eventBus);
+    var eventBus = document.querySelector('#eventBus');
+    eventBus.registerHandlers = [
+      { address: 'address1', handler: function(data) {
+        console.log('register1 handler to address1');
+      }},
+      { address: 'address2', handler: function(data) {
+        console.log('register2 handler to address2');
+      }}
+    ];
 
     suite('<vertx-eventbus>', function() {
-
-      setup(function(){
-        console.log('setup!!!!');
-      });
-
-      teardown(function(){
-        console.log('teardown!!!!');
-      });
 
       test('should have url attribute', function() {
         expect(eventBus.url).to.equal('http://localhost:8090');
       });
 
-      test('should close the connection after calling close()', function(done) {
-        eventBus.addEventListener('open', function() {
-          done();
-          eventBus.close();
-          expect(eventBus.isConnected).to.equal(false);
-        });
+      test('should have pingIntervalInSeconds attribute if provided', function() {
+        expect(eventBus.pingIntervalInSeconds).to.equal('20');
       });
 
-      test('should fire open event after accessing to vertx backend successfully', function(done) {
-        eventBus.addEventListener('open', function() {
-          expect(eventBus.isConnected).to.equal(true);
-          done();
-        });
+      test('should have autoReconnectIntervalInSeconds attribute if provided', function() {
+        expect(eventBus.autoReconnectIntervalInSeconds).to.equal('10');
+      });
+
+      test('should have registerHandlers attribute if provided', function() {
+        expect(eventBus.registerHandlers).to.have.length(2);
       });
     });
 </script>

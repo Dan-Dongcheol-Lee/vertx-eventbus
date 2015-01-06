@@ -1,6 +1,12 @@
 {
   "name": "vertx-eventbus",
   "version": "1.0.0",
+  "main": "./src/vertx-eventbus.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#~2.0.5"
   },
@@ -11,6 +17,6 @@
     "sockjs": "~0.3.4",
     "webcomponentsjs": "~0.5.2"
   },
-  "homepage": "https://github.com/Dan-Dongcheol-Lee/web-components/vertx-eventbus",
-  "license": "Apache-2"
+  "homepage": "https://github.com/Dan-Dongcheol-Lee/vertx-eventbus",
+  "license": "Apache 2.0"
 }
