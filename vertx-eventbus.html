@@ -1,53 +1,80 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<script type="text/javascript" src="../bower_components/sockjs/sockjs.js"></script>
-<script type="text/javascript" src="../bower_components/vertxbus/vertxbus.js"></script>
-
 <polymer-element name="vertx-eventbus"
-                 attributes="url auto pingIntervalInSeconds registerHandlers autoReconnectIntervalInSeconds">
+                 attributes="url auto pingIntervalSeconds registerHandlers reconnectIntervalSeconds">
     <script>
     Polymer('vertx-eventbus', {
       url: null,
       auto: false,
-      pingIntervalInSeconds: null,
+      pingIntervalSeconds: null,
+      reconnectIntervalSeconds: null,
       registerHandlers: null,
-      autoReconnectIntervalInSeconds: null,
       eventBus: null,
       isConnected: false,
 
       connect: function() {
         var self = this;
-        var options = this.pingIntervalInSeconds ? {vertxbus_ping_interval: (1000 * this.pingIntervalInSeconds)} : null;
-        this.eventBus = new vertx.EventBus(this.url, options);
-        this.eventBus.onopen = function() {
-            if (self.registerHandlers) {
-                self.registerHandlers.forEach(function(regHandler) {
-                    self.eventBus.registerHandler(regHandler.address, regHandler.handler);
-                });
-            }
-            self.isConnected = true;
-            self.fire('open');
-        };
+        try {
+            var options = this.pingIntervalSeconds ? {vertxbus_ping_interval: (1000 * this.pingIntervalSeconds)} : null;
+            this.eventBus = new vertx.EventBus(this.url, options);
+            this.eventBus.onopen = function() {
+                self.isConnected = true;
+                self.fire('open');
+                if (self.registerHandlers) {
+                    self.registerHandlers.forEach(function(regHandler) {
+                        self.eventBus.registerHandler(regHandler.address, regHandler.handler);
+                    });
+                }
+            };
 
-        this.eventBus.onclose = function() {
-            if (self.autoReconnectIntervalInSeconds) {
-                setTimeout(self.connect(), (1000 * self.autoReconnectIntervalInSeconds));
-            }
-            self.isConnected = false;
-            self.fire('close');
-        };
+            this.eventBus.onclose = function() {
+                self.isConnected = false;
+                self.fire('close');
+                if (self.reconnectIntervalSeconds) {
+                    setTimeout(self.connect(), (1000 * self.reconnectIntervalSeconds));
+                }
+            };
+        } catch (e) {
+            console.warn(e);
+            this.fire('error', e);
+        }
       },
 
       close: function() {
-        if (this.eventBus && this.isConnected && this.registerHandlers) {
-            this.registerHandlers.forEach(function(regHandler) {
-                this.eventBus.unregisterHandler(regHandler.address, regHandler.handler);
-            });
-            this.eventBus.close();
+        try {
+            if (this.isConnected) {
+                this.registerHandlers.forEach(function(regHandler) {
+                    this.eventBus.unregisterHandler(regHandler.address, regHandler.handler);
+                });
+                this.eventBus.close();
+            }
+        } catch (e) {
+            console.warn(e);
+            this.fire('error', e);
+        }
+      },
+
+      send: function(address, message, replyHandler) {
+        try {
+            if (this.isConnected) {
+                this.eventBus.send(address, message, replyHandler);
+            }
+        } catch (e) {
+            console.warn(e);
+            this.fire('error', e);
+        }
+      },
+
+      publish: function(address, message) {
+        try {
+            if (this.isConnected) {
+                this.eventBus.publish(address, message);
+            }
+        } catch (e) {
+            console.warn(e);
+            this.fire('error', e);
         }
       },
 
       ready: function() {
-        console.log(this.auto);
         if (this.auto) {
             this.connect();
         }

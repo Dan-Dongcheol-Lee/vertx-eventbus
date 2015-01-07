@@ -4,13 +4,16 @@
     <meta charset="utf-8">
     <script src="../bower_components/webcomponentsjs/webcomponents.min.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
+    <script src="../bower_components/sockjs/sockjs.js"></script>
+    <script src="../bower_components/vertxbus/vertxbus.js"></script>
+    <link rel="import" href="../bower_components/polymer/polymer.html">
     <link rel="import" href="../vertx-eventbus.html">
 </head>
 <body>
 <vertx-eventbus id="eventBus"
                 url="http://localhost:8090"
-                pingIntervalInSeconds="20"
-                autoReconnectIntervalInSeconds="10">
+                pingIntervalSeconds="20"
+                reconnectIntervalSeconds="10">
 </vertx-eventbus>
 <script>
 
@@ -30,12 +33,12 @@
         expect(eventBus.url).to.equal('http://localhost:8090');
       });
 
-      test('should have pingIntervalInSeconds attribute if provided', function() {
-        expect(eventBus.pingIntervalInSeconds).to.equal('20');
+      test('should have pingIntervalSeconds attribute if provided', function() {
+        expect(eventBus.pingIntervalSeconds).to.equal('20');
       });
 
-      test('should have autoReconnectIntervalInSeconds attribute if provided', function() {
-        expect(eventBus.autoReconnectIntervalInSeconds).to.equal('10');
+      test('should have reconnectIntervalSeconds attribute if provided', function() {
+        expect(eventBus.reconnectIntervalSeconds).to.equal('10');
       });
 
       test('should have registerHandlers attribute if provided', function() {

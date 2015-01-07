@@ -1,13 +1,22 @@
 {
+  "author": "Dan Dongcheol Lee",
   "name": "vertx-eventbus",
-  "version": "1.0.0",
+  "description": "Vert.x eventbus Polymer web component",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Dan-Dongcheol-Lee/vertx-eventbus",
+  "license": "Apache 2.0",
   "main": "./vertx-eventbus.html",
+  "keywords": ["polymer", "vertx", "webcomponent", "websocket"],
   "ignore": [
     "*.js",
     "test",
     "node_modules",
     "bower_components"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Dan-Dongcheol-Lee/vertx-eventbus"
+  },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#~2.0.5"
   },
@@ -17,7 +26,5 @@
     "vertxbus": "*",
     "sockjs": "~0.3.4",
     "webcomponentsjs": "~0.5.2"
-  },
-  "homepage": "https://github.com/Dan-Dongcheol-Lee/vertx-eventbus",
-  "license": "Apache 2.0"
+  }
 }
