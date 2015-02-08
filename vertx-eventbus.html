@@ -1,35 +1,38 @@
 <polymer-element name="vertx-eventbus"
-                 attributes="url auto pingIntervalSeconds registerHandlers reconnectIntervalSeconds">
+                 attributes="url auto pingIntervalSeconds reconnectIntervalSeconds">
+    <template>
+        <content id="_content" select="register-handler"></content>
+    </template>
     <script>
     Polymer('vertx-eventbus', {
       url: null,
       auto: false,
       pingIntervalSeconds: null,
       reconnectIntervalSeconds: null,
-      registerHandlers: null,
+      registerHandlers: [],
       eventBus: null,
       isConnected: false,
 
       connect: function() {
-        var self = this;
+        var __self = this;
         try {
             var options = this.pingIntervalSeconds ? {vertxbus_ping_interval: (1000 * this.pingIntervalSeconds)} : null;
             this.eventBus = new vertx.EventBus(this.url, options);
             this.eventBus.onopen = function() {
-                self.isConnected = true;
-                self.fire('open');
-                if (self.registerHandlers) {
-                    self.registerHandlers.forEach(function(regHandler) {
-                        self.eventBus.registerHandler(regHandler.address, regHandler.handler);
+                __self.isConnected = true;
+                __self.fire('open');
+                if (__self.registerHandlers) {
+                    __self.registerHandlers.forEach(function(regHandler) {
+                        __self.eventBus.registerHandler(regHandler.address, regHandler.handler);
                     });
                 }
             };
 
             this.eventBus.onclose = function() {
-                self.isConnected = false;
-                self.fire('close');
-                if (self.reconnectIntervalSeconds) {
-                    setTimeout(self.connect(), (1000 * self.reconnectIntervalSeconds));
+                __self.isConnected = false;
+                __self.fire('close');
+                if (__self.reconnectIntervalSeconds) {
+                    setTimeout(__self.connect(), (1000 * __self.reconnectIntervalSeconds));
                 }
             };
         } catch (e) {
@@ -74,7 +77,23 @@
         }
       },
 
-      ready: function() {
+      domReady: function() {
+        var __self = this;
+        var handlerElements = this.$._content.getDistributedNodes().array();
+        var handlers = [];
+        handlerElements.forEach(function(regHandler) {
+            var address = regHandler.getAttribute('address');
+            var handlerFn = eval('(' + regHandler.getAttribute('handler') + ')');
+            if (typeof handlerFn !== 'function') {
+                var message = 'Registered handler is not a function.';
+                console.warn(message);
+                __self.fire('error', message);
+                return;
+            }
+            handlers.push({address: regHandler.getAttribute('address'), handler: handlerFn});
+        });
+        this.registerHandlers = handlers;
+
         if (this.auto) {
             this.connect();
         }

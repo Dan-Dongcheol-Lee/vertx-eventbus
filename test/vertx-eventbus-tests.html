@@ -14,18 +14,20 @@
                 url="http://localhost:8090"
                 pingIntervalSeconds="20"
                 reconnectIntervalSeconds="10">
+    <register-handler address="address1" handler="{{handler1}}"></register-handler>
+    <register-handler address="address2" handler="{{handler2}}"></register-handler>
 </vertx-eventbus>
 <script>
 
+    this.handler1 = function(data) {
+        console.log('register handler1 to address1');
+    };
+
+    this.handler2 = function(data) {
+        console.log('register handler2 to address2');
+    };
+
     var eventBus = document.querySelector('#eventBus');
-    eventBus.registerHandlers = [
-      { address: 'address1', handler: function(data) {
-        console.log('register1 handler to address1');
-      }},
-      { address: 'address2', handler: function(data) {
-        console.log('register2 handler to address2');
-      }}
-    ];
 
     suite('<vertx-eventbus>', function() {
 
