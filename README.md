@@ -3,6 +3,13 @@ vertx-eventbus
 
 vertx-eventbus polymer web component.
 
+Just tried to create a web component for vertx eventbus java script and realised that it is great to have the web component instead of javascript codes.
+In addition, it supports retry feature when the connection is close so that it will automatically retry to connect to the server by given reconnectIntervalSeconds.
+
+However, this still needs to be more robust.
+
+
+
 ### How to use ```<vertx-eventbus>```?
 
 ```html
@@ -40,12 +47,7 @@ vertx-eventbus polymer web component.
   ...
 ```
 
-
-### nested ```<register-handler>``` element
-
-Use the list of elements to register eventbus handlers with address respectively and each handler needs to be declared in javascript as above. They are therefore called in ```<vertx-eventbus>``` as registered handlers.
-
-### attributes
+### attributes of ```<vertx-eventbus>```
 
 **url**: vertx event bus url to access.
 
@@ -60,4 +62,13 @@ Use the list of elements to register eventbus handlers with address respectively
 **on-error**: Bined function will be called when unexpected error occurs due to wrong configuration.
 
 
+### nested ```<register-handler>```
+
+Use the list of these elements to register eventbus handlers with addresses and each handler needs to be respectively declared in javascript as above. They are therefore called in ```<vertx-eventbus>``` when registering the handlers to event bus.
+
+### attributes of ```<register-handler>```
+
+**address**: String of address to listen to.
+
+**handler**: Function of a message handler for the specific address and it will get invoked when the message comes into the address.
 
